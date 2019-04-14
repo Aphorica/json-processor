@@ -1,5 +1,8 @@
 # @aphorica/json-processor
 
+github: https://aphorica.github.io<br/>
+Web: https://aphorica.com
+
 Environment: Node.js
 
 ## Overview
@@ -15,8 +18,8 @@ during traversal.  Possible keys are:
 of information.  The file is read and traversal continues into the file (allowing
 nesting.)</dd>
 <dt>"!!" (anything following the bangs is ok)</dt>
-</dd>A comment.  Comments are simply removed. The comment-prefix can be changed
-in the passed in options (see below.)</dd>
+<dd>A comment.  Comments are simply removed. The comment-prefix can be changed
+in the passed-in options (see below.)</dd>
 </dt>
 
 This allows two things:
@@ -24,12 +27,13 @@ This allows two things:
 1. Assembly of a large configuration from many smaller, more easily managed and
 containable configuration files.
 
-2. Meaningful commenting in a JSON file (Crockford indicates commenting was explicitly
-left out of JSON, but I don't think he considered the vast usage that to which JSON
-might be used.)  Without _json-processor_, you can certainly add a comment prefix key
-if you want, but the problem is that when you fetch the keys, you'll have to
-account for your comments and ignore them. _json-processor_ provides a canonical
-form, so you don't have to think about it.
+2. Meaningful commenting in a JSON file (Crockford indicates commenting was explicitly left out of the JSON specification, but I think they're
+    useful.)  Without _json-processor_, you can certainly add a comment
+    prefix key in your objects, if you want, but in your program you'll
+    have to handle them, yourself.
+    
+    _json-processor_ provides a canonical form and implementation, so
+    you don't have to think about it.
 
 ## Content
 
@@ -84,16 +88,24 @@ using normal JSON syntax:
 }
 ```
 
-Anything underneath the comment key will be removed (you don't have to provide the
-comment key in child objects.)
+Anything children under the comment key will be removed (you don't
+have to provide the comment key in child objects.)
 
 ## Invoking
 ```
-  processed = processJSON(base-path, file, options)
+  processed = processJSON([base-path], file, [options])
 ```
-
+Args:
+<dl>
+<dt>base-path (optional - needed if 'paths' are provided [see below])
+<dd>
+The root path of the collection of json files.</dd>
+<dt>file</dt>
+<dd>
+The top-level json filename</dd>
+<dt>options (optional)</dt>
+<dd>
 If provided, options are:
-
 <dl>
 <dt>paths:</dt>
 <dd>An object of replacement keys and paths.  When encountered in a value (delimited
@@ -103,8 +115,10 @@ If provided, options are:
 <dd>Specify another comment prefix vs the default.  The processor will only
     look at the prefix to qualify a comment &ndash; any other characters are ignored.
 </dl>
+</dd>
+</dl>
 
-
+### Example Invocation
 Here is an example invocation from an app I'm working on:
 
 ```
@@ -119,9 +133,7 @@ Here is an example invocation from an app I'm working on:
 ```
 
 ## Notes
-
- - More complete documentation, tests and information will be forthcoming.  I'm currently
-   in the process of factoring this out of an application.
+ - All paths are expected to be trailed with a path separator.
 
  - I think it would be feasible to allow the processor to read other types of files &ndash;
    as long as the contents somehow resolve to a JSON object, it doesn't matter what

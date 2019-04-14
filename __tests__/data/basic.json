@@ -1,0 +1,11 @@
+{
+  "first": "George",
+  "last": "Smith",
+  "age": 33,
+  "registered": "true",
+  "contact": {
+    "phone": "700-425-6382",
+    "fax": "700-425-6383",
+    "e-mail": "georges@yahoo.com"
+  }
+}

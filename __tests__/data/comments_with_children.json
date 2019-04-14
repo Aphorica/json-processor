@@ -1,0 +1,22 @@
+{
+  "!!": [
+    "Basic information, here",
+    "This is an array of comments",
+    {"more-info": "an object in an array of comments"}
+  ],
+
+  "first": "George",
+  "last": "Smith",
+  "age": 33,
+  "registered": "true",
+  "contact": {
+    "!!": {
+      "what": "Contact information, here",
+      "details": "these are comments as objects"
+    },
+
+    "phone": "700-425-6382",
+    "fax": "700-425-6383",
+    "e-mail": "georges@yahoo.com"
+  }
+}

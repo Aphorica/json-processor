@@ -6,5 +6,16 @@
   "repository": "https://github.com/Aphorica/json-processor",
   "author": "Rick Berger - Aphorica, Inc. <gbergeraph@gmail.com>",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "scripts": {
+    "test": "jest",
+    "debug": "node --inspect-brk node_modules/.bin/jest --runInBand"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/plugin-transform-modules-commonjs": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "babel-jest": "^24.7.1",
+    "jest": "^24.7.1"
+  }
 }

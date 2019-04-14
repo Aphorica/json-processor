@@ -3,7 +3,8 @@
 import fs from 'fs'
 import path from 'path'
 
-let commentPrefix = '!!'
+const DEFAULT_COMMENT_PREFIX = '!!'
+let commentPrefix
 
 function processJSON(startPath, filename, options) {
   if (!filename || (typeof filename) === 'object') {
@@ -14,6 +15,11 @@ function processJSON(startPath, filename, options) {
     options = filename
     filename = ''
   }
+
+  commentPrefix = DEFAULT_COMMENT_PREFIX
+              // this can hang around between invocations,
+              // set it to default and let options override
+              // if specified
 
   if (options) {
     let optionsKeys = Object.keys(options)
