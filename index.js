@@ -73,25 +73,16 @@ function processJSON(startPath, filename, options) {
 
 					buf = fs.readFileSync(fn, 'utf8');
 
-					switch (path.extname(fn)) {
-						case ".json":
-							newItem = JSON.parse(buf);
-							break;
+					if (path.extname(fn) === ".json")
+						newItem = JSON.parse(buf);
 
-						case ".txt": {
-								let nameItems = buf.split("\n"), nx, splitName;
-							  newItem = {};
-								for (nx = 0; nx < nameItems.length; ++nx) {
-									splitName = nameItems[nx].split(':');
-									newItem[splitName[0].trim()] = splitName[1].trim();
-								}
-							}
-							break;
+          // other potential filetype handling here
+          // will implement if needed
 
-						default:
-							console.log("ERROR: Unrecognized file type");
-							break;
-						}
+					else {
+            console.log("ERROR: Unrecognized file type");
+            break;
+          }
 
 					dv[thisKey] = processEntries(newItem);
 				}
