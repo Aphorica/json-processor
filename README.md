@@ -5,16 +5,49 @@ Web: https://aphorica.com
 
 Environment: Node.js
 
+## Motivation
+
+A recent project I worked on implemented a sophisticated process
+that was configuration driven, the configuration being specified
+in JSON files &ndash; a good idea, but the configuration
+file was getting unwieldy.  I needed a way to
+break the configuration into more manageable pieces.
+
+Another driving factor was that this application could have several
+kinds of inputs and outputs, each having their own partial configuration
+sets.  These needed to be combined according options chosen in the UI.
+By breaking the configuration into multiple files, I could also address
+this feature.
+
+There are other solutions for providing segmented configuration files,
+but they implement YAL (yet another language), and provide kitchen
+sink functionality.
+
+What I was looking for was simple:
+
+ - Stay within the JSON format &mdash; this should be doable
+   with canonical JSON syntax, without having to extend the language.
+
+ - Providing a commenting form might be a nice add-on, since I have
+   to process the entire file, anyway.
+
+ - I don't need or want anything more than this.
+
+ - I want it nice and tiny.
+
+I couldn't really find anything else on _npm_ or otherwise, so
+I wrote this.
+
+Enjoy, if you find it useful.
+
 ## Overview
 
-JSON is a terrific format, but the files can get long and unwieldy.
-
-This utility reads JSON files and looks for directives in the keys it encounters
+The utility reads JSON files and looks for directives in the keys it encounters
 during traversal.  Possible keys are:
 
 <dl>
-<dt>file</dt>
-<dd>The value is a file that contains further JSON (or other type &ndash; see below)
+<dt>"file"</dt>
+<dd>The value specifies a file that contains further JSON (or perhaps other input type &ndash; see below)
 of information.  The file is read and traversal continues into the file (allowing
 nesting.)</dd>
 <dt>"!!" (anything following the bangs is ok)</dt>
@@ -43,7 +76,6 @@ Here is an example JSON file with both a comment and file directives:
 {
   "!!": "The summary sheet retabulates the 'Clockify' input into its final form.  Note the individual tab sheets are created in another process (driven by 'by_contractor.json')",
 
-  "output": "none",
   "links-actor":"target",
   "sheetStyle": {
     "font": {
@@ -64,11 +96,15 @@ Here is an example JSON file with both a comment and file directives:
   }
 }
 ```
+Notes on the file content:
 
-Note this will replace array items as long as they are objects.
+- this can replace object content, or array items as long as they are objects.
 
-In this example, the comment is long, but if you view it in an editor with soft
-wraps set (_vscode_, in my case), it looks fine.
+- the {...} specification is a substitution key.  See the _Invoking_ topic,
+  below.
+
+In this example, the comment is long, but if you view it in an editor
+with soft wraps set (_vscode_, in my case), it looks fine.
 
 Alternatively, you can break up comments into sections, if you like,
 using normal JSON syntax:
@@ -88,7 +124,7 @@ using normal JSON syntax:
 }
 ```
 
-Anything children under the comment key will be removed (you don't
+Any children under the comment key will be removed (you don't
 have to provide the comment key in child objects.)
 
 ## Invoking
@@ -132,15 +168,21 @@ Here is an example invocation from an app I'm working on:
                         }})
 ```
 
+This uses paths contained in a `Settings` object.  For another
+example, see the test file.
+
 ## Notes
  - All paths are expected to be trailed with a path separator.
 
- - I think it would be feasible to allow the processor to read other types of files &ndash;
-   as long as the contents somehow resolve to a JSON object, it doesn't matter what
-   the format is.  A potential approach would be in the options, provide a list of
-   file suffixes and a functions to read the specific content per suffix and return
-   an object.
+ - I think it would be feasible to allow the processor to read other
+   types of files &ndash; as long as the contents can somehow be
+   resolved to a valid js object, it doesn't matter what the format is.
+   
+   An approach would be in the options, provide a list of file suffixes
+   and functions to parse the specific content on a per suffix basis and
+   return an object.
 
- - On the name: I initially wanted to call it 'json-pp' for json _pre-processor_,
-   however _pre-processor_ isn't exactly right, since the files are read before
-   any processing.  So, I'm just calling it _'json-processor'_
+ - On the name: I initially wanted to call it 'json-pp' for 'json _pre-processor_', however _pre-processor_ isn't exactly right,
+    since the files are read and parsed before any processing.
+    
+    So, I'm just calling it _'json-processor'_
