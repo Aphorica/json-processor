@@ -1,0 +1,9 @@
+{
+  "!!": "Include and process a text file",
+
+  "first": "Jane",
+  "last": "Doe",
+  "info" : {
+    "file" : "info.txt"
+  }
+}

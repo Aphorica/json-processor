@@ -64,6 +64,7 @@ function processJSON(startPath, filename, options) {
 				let candidateKey = Object.keys(thisItem)[0];
 				if (candidateKey === 'file') {
           let fn = thisItem[candidateKey], buf
+          let ext = path.extname(fn)
 
           if (options.paths) {
             let varKeys = Object.keys(options.paths)
@@ -71,16 +72,18 @@ function processJSON(startPath, filename, options) {
               fn = fn.replace('{' +  varKeys[nx] + '}', options.paths[varKeys[nx]])
           }
 
+          fn = startPath + fn
+
 					buf = fs.readFileSync(fn, 'utf8');
 
 					if (path.extname(fn) === ".json")
 						newItem = JSON.parse(buf);
 
-          // other potential filetype handling here
-          // will implement if needed
+          else if (options.types && (ext in options.types))
+            newItem = options.types[ext](buf)
 
 					else {
-            console.log("ERROR: Unrecognized file type");
+            console.log("ERROR: Unrecognized file type: " + ext);
             break;
           }
 
