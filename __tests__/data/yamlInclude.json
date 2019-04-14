@@ -1,0 +1,9 @@
+{
+  "!!": "Include and process a yaml file",
+
+  "first": "Robert",
+  "last": "Smith",
+  "info" : {
+    "file" : "info.yml"
+  }
+}

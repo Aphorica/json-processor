@@ -1,0 +1,6 @@
+age: 32
+weight: 195
+hair: brown
+children:
+ - "Bobby"
+ - "Janet"

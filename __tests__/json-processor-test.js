@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import processJSON from '../index.js'
+import yaml from 'js-yaml'
 
 let dataDir = '__tests__' + path.sep + 'data' + path.sep
 
@@ -75,7 +76,6 @@ describe ("Include other file types", ()=> {
     let expectedTextIncludeBuf = fs.readFileSync(dataDir + 'expectedTextInclude.json', 'utf8')
     let expectedTextIncludeJSON = JSON.parse(expectedTextIncludeBuf)
 
-    debugger
     jsonProcessed = processJSON(dataDir, 'textInclude.json',
                                   {
                                     "types": {
@@ -85,5 +85,24 @@ describe ("Include other file types", ()=> {
                                 )
 
     expect(jsonProcessed).toEqual(expectedTextIncludeJSON)
+  })
+
+    test.only("Process and include yaml file", ()=>{
+    function procYaml(text) {
+      return yaml.safeLoad(text) // , {schema: 'JSON_SCHEMA'})
+              // for instance...
+    }
+    let expectedYamlIncludeBuf = fs.readFileSync(dataDir + 'expectedYamlInclude.json', 'utf8')
+    let expectedYamlIncludeJSON = JSON.parse(expectedYamlIncludeBuf)
+
+    jsonProcessed = processJSON(dataDir, 'yamlInclude.json',
+                                  {
+                                    "types": {
+                                      ".yml": procYaml
+                                    }
+                                  }
+                                )
+
+    expect(jsonProcessed).toEqual(expectedYamlIncludeJSON)
   })
 })
