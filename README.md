@@ -98,7 +98,11 @@ Here is an example JSON file with both a comment and file directives:
 ```
 Notes on the file content:
 
-- this can replace object content, or array items as long as they are objects.
+- The will be replaced in its entirety by the content in the file.
+
+- An array of items can be specified.  If an array item is an
+  object specifying a file the entire item will be replaced with
+  the content in the specified file.
 
 - the {...} specification is a substitution key.  See the _Invoking_ topic,
   below.
@@ -120,12 +124,15 @@ using normal JSON syntax:
   "actual-data": {
       ...
   }
-  
 }
 ```
 
 Any children under the comment key will be removed (you don't
 have to provide the comment key in child objects.)
+
+If a comment is an array item, the item will be removed from
+the array and the array rebuilt, sans comment item (order will
+be maintained)
 
 ## Invoking
 ```
@@ -171,16 +178,58 @@ Here is an example invocation from an app I'm working on:
 This uses paths contained in a `Settings` object.  For another
 example, see the test file.
 
+## Including Other File Types
+
+You can include other file types by providing a list of objects,
+each specifying a file extension and a processor to return a js
+object.  For instance, a text file with arbirtrarily formatted
+information could be processed by including it in a JSON file
+like so:
+```
+  {
+    ...
+    "other": {
+      "file": "somefile.txt"
+    }
+    ...
+  }
+```
+
+And providing the extension and processor in the options:
+
+```
+  function parseText(text) {
+    let retObj = {}
+    // build up the object by parsing the text
+    return retObj 
+  }
+
+  processJSON(path, fn, {
+    types: {
+      ".txt": procText
+    }
+  })
+```
+
+You can process YAML by providing a YAML parser.
+```
+  import yaml from 'js-yaml'
+
+  function procYaml(text) {
+    yaml.loadSafe(text) // provide additional args here, if needed
+  }
+
+  processJSON(path, fn, {
+    types: {
+      ".yml": procYaml
+    }
+  })
+```
+
+See the test for working examples
+
 ## Notes
  - All paths are expected to be trailed with a path separator.
-
- - I think it would be feasible to allow the processor to read other
-   types of files &ndash; as long as the contents can somehow be
-   resolved to a valid js object, it doesn't matter what the format is.
-   
-   An approach would be in the options, provide a list of file suffixes
-   and functions to parse the specific content on a per suffix basis and
-   return an object.
 
  - On the name: I initially wanted to call it 'json-pp' for 'json _pre-processor_', however _pre-processor_ isn't exactly right,
     since the files are read and parsed before any processing.
