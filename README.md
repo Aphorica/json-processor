@@ -98,7 +98,8 @@ Here is an example JSON file with both a comment and file directives:
 ```
 Notes on the file content:
 
-- The will be replaced in its entirety by the content in the file.
+- The object specifying a file will be replaced in its entirety by
+  the content in the file.
 
 - An array of items can be specified.  If an array item is an
   object specifying a file the entire item will be replaced with
