@@ -60,7 +60,7 @@ function processJSON(startPath, filename, options) {
         continue
       }
 
-			if (typeof thisItem === 'object') {  // (Array is object - handles the same)
+			if (typeof thisItem === 'object') {
 				let candidateKey = Object.keys(thisItem)[0];
 
 				if (candidateKey === 'file') {

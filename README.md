@@ -91,7 +91,7 @@ Here is an example JSON file with both a comment and file directives:
 	],
   "lookups": {
     "contractors": {
-      "file": "{contractors}"
+      "file": "[contractors]"
     }
   }
 }
@@ -105,7 +105,7 @@ Notes on the file content:
   object specifying a file the entire item will be replaced with
   the content in the specified file.
 
-- the {...} specification is a substitution key.  See the _Invoking_ topic,
+- the {...} and [...] delimit substitution keys.  See the _Substitution_ topic,
   below.
 
 In this example, the comment is long, but if you view it in an editor
@@ -134,6 +134,20 @@ have to provide the comment key in child objects.)
 If a comment is an array item, the item will be removed from
 the array and the array rebuilt, sans comment item (order will
 be maintained)
+
+## Substitution
+
+Substitutions happen in the value field only for objects
+containing _"file"_ keys. Substitution paths are listed in the
+_"options/paths"_ argument on invocation (see next).
+
+The substitution delimiters are _"{&nbsp;}"_.
+
+When a delimited substitution value is encountered in a value, it will be
+replaced with the corresponding path, and the base path prepended.
+
+if the completed path is absolute (per `path.absolute()` test), the
+base path will _not_ be prepended.
 
 ## Invoking
 ```
@@ -171,7 +185,6 @@ Here is an example invocation from an app I'm working on:
                         paths: {
                           output: Settings.outputsConfigPath,
                           input: Settings.inputsConfigPath,
-                          base: Settings.baseConfigPath,
                           contractors: Settings.contractorsFile
                         }})
 ```
