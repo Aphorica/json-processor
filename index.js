@@ -62,17 +62,22 @@ function processJSON(startPath, filename, options) {
 
 			if (typeof thisItem === 'object') {  // (Array is object - handles the same)
 				let candidateKey = Object.keys(thisItem)[0];
+
 				if (candidateKey === 'file') {
           let fn = thisItem[candidateKey], buf
           let ext = path.extname(fn)
-
+          
           if (options.paths) {
             let varKeys = Object.keys(options.paths)
             for (let nx = 0; nx < varKeys.length; ++nx)
-              fn = fn.replace('{' +  varKeys[nx] + '}', options.paths[varKeys[nx]])
+              if (fn.indexOf(varKeys[nx]) > -1 ) {
+                fn = fn.replace('{' +  varKeys[nx] + '}', options.paths[varKeys[nx]])
+                break;
+              }
           }
 
-          fn = startPath + fn
+          if (!path.isAbsolute(fn))
+            fn = startPath + fn
 
 					buf = fs.readFileSync(fn, 'utf8');
 
