@@ -26,7 +26,7 @@ function processJSON(startPath, filename, options) {
     for (let ix = 0; ix < optionsKeys.length; ++ix) {
       switch(optionsKeys[ix]) {
         case 'comment-prefix':
-          commentPrefix = options['comment-prefix']; break;
+          commentPrefix = options['comment-prefix']; break
       }
     }
   }
@@ -41,7 +41,7 @@ function processJSON(startPath, filename, options) {
         continue
       }
 
-			thisItem = dv[thisKey];
+			thisItem = dv[thisKey]
 
       if (Array.isArray(thisItem)) {
         let processedItem
@@ -61,7 +61,7 @@ function processJSON(startPath, filename, options) {
       }
 
 			if (typeof thisItem === 'object') {
-				let candidateKey = Object.keys(thisItem)[0];
+				let candidateKey = Object.keys(thisItem)[0]
 
 				if (candidateKey === 'file') {
           let fn = thisItem[candidateKey], buf
@@ -72,7 +72,7 @@ function processJSON(startPath, filename, options) {
             for (let nx = 0; nx < varKeys.length; ++nx)
               if (fn.indexOf(varKeys[nx]) > -1 ) {
                 fn = fn.replace('{' +  varKeys[nx] + '}', options.paths[varKeys[nx]])
-                break;
+                break
               }
           }
 
@@ -85,37 +85,35 @@ function processJSON(startPath, filename, options) {
           if (!fs.existsSync(fn))
             throw('json-processor: included file not found: "' + fn + '"')
 
-					buf = fs.readFileSync(fn, 'utf8');
+					buf = fs.readFileSync(fn, 'utf8')
 
 					if (path.extname(fn) === ".json")
-						newItem = JSON.parse(buf);
+						newItem = JSON.parse(buf)
 
           else if (options && (ext in options.types))
             newItem = options.types[ext](buf)
 
-					else {
-            throw("json-processor: Unrecognized file type: " + ext);
-            break;
-          }
+					else
+            throw("json-processor: Unrecognized file type: " + ext)
 
-					dv[thisKey] = processEntries(newItem);
+					dv[thisKey] = processEntries(newItem)
 				}
 
 				else
-					dv[thisKey] = processEntries(thisItem);
+					dv[thisKey] = processEntries(thisItem)
 			}
 		}
 
-		return dv;
+		return dv
 	}
 
   let fn = startPath + (filename || ''), inbuf, json_in, json_out
   if (!fs.existsSync(fn))
     throw("json-processor: Can't read file, doesn't exist: \"" + fn + '"')
 
-  inbuf = fs.readFileSync(fn, 'utf8');
-	json_in = JSON.parse(inbuf);
-	json_out = processEntries(json_in);
+  inbuf = fs.readFileSync(fn, 'utf8')
+	json_in = JSON.parse(inbuf)
+	json_out = processEntries(json_in)
 
 	return json_out
 }
