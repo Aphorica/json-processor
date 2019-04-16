@@ -40,6 +40,14 @@ I wrote this.
 
 Enjoy, if you find it useful.
 
+## Installing
+
+`npm install @aphorica/json-processor`
+
+or
+
+`yarn add @aphorica/json-processor`
+
 ## Overview
 
 The utility reads JSON files and looks for directives in the keys it encounters
