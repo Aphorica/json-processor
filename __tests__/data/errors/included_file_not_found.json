@@ -1,0 +1,7 @@
+{
+  "!!": "Included file not found test.",
+
+  "other": {
+    "file": "noexist.json"
+  }
+}

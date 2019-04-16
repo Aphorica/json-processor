@@ -1,0 +1,7 @@
+{
+  "!!": "Substitution path not found test file",
+
+  "other": {
+    "file": "{bad}somefile.json"
+  }
+}

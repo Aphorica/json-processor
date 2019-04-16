@@ -56,7 +56,7 @@ describe ("Configuration with file inclusions + comments", ()=> {
 })
 
 describe ("Include other file types", ()=> {
-  test.only("Process and include text file", ()=>{
+  test("Process and include text file", ()=>{
     function procText(text) {
       let retObj = {}
       let items = text.split("\n"), parts, v, vtext
@@ -77,17 +77,17 @@ describe ("Include other file types", ()=> {
     let expectedTextIncludeJSON = JSON.parse(expectedTextIncludeBuf)
 
     jsonProcessed = processJSON(dataDir, 'textInclude.json',
-                                  {
-                                    "types": {
-                                      ".txt": procText
+                                    {
+                                      "types": {
+                                        ".txt": procText
+                                      }
                                     }
-                                  }
-                                )
+                                  )
 
-    expect(jsonProcessed).toEqual(expectedTextIncludeJSON)
-  })
+      expect(jsonProcessed).toEqual(expectedTextIncludeJSON)
+    })
 
-    test.only("Process and include yaml file", ()=>{
+    test("Process and include yaml file", ()=>{
     function procYaml(text) {
       return yaml.safeLoad(text) // , {schema: 'JSON_SCHEMA'})
               // for instance...
@@ -104,5 +104,55 @@ describe ("Include other file types", ()=> {
                                 )
 
     expect(jsonProcessed).toEqual(expectedYamlIncludeJSON)
+  })
+})
+
+describe ("Errors", ()=> {
+  let errDir = dataDir + 'errors' + path.sep
+
+  test("throws on-existent entry file", ()=> {
+    expect(()=> {
+      processJSON(dataDir, 'bad_file.json')
+    }).toThrow(/^json-processor: Can't read file, doesn't exist:/)
+  })
+
+
+  test("throws on bad json in entry file", ()=> {
+    expect(()=> {
+      processJSON(errDir, 'bad_json.json')
+    }).toThrow()
+  })
+
+  test("throws on bad data in include file", ()=> {
+    expect(()=> {
+      processJSON(errDir, 'bad_data_in_include.json')
+    }).toThrow()
+  })
+
+  test("throws on unrecognized file type", ()=> {
+    expect(()=> {
+      processJSON(dataDir, 'errors/unrecognized_file_type.json')
+    }).toThrow(/^json-processor: Unrecognized file type:/)
+  })
+
+  test("throws on substitution path not found (no options)", ()=> {
+    expect(()=> {
+      processJSON(dataDir, "errors/substitution_path_not_found.json")
+    }).toThrow(/^json-processor: no substitution path for fn:/)
+  })
+
+  test("throws on substitution path not found (with options)", ()=> {
+    expect(()=> {
+      processJSON(dataDir, "errors/substitution_path_not_found.json",
+                  {
+                    paths: {}
+                  })
+    }).toThrow(/^json-processor: no substitution path for fn:/)
+  })
+
+  test("throws on included file not found", ()=> {
+    expect(()=> {
+      processJSON(dataDir, "errors/included_file_not_found.json")
+    }).toThrow(/^json-processor: included file not found:/)
   })
 })

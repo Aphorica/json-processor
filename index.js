@@ -67,7 +67,7 @@ function processJSON(startPath, filename, options) {
           let fn = thisItem[candidateKey], buf
           let ext = path.extname(fn)
           
-          if (options.paths) {
+          if (options && options.paths) {
             let varKeys = Object.keys(options.paths)
             for (let nx = 0; nx < varKeys.length; ++nx)
               if (fn.indexOf(varKeys[nx]) > -1 ) {
@@ -76,19 +76,25 @@ function processJSON(startPath, filename, options) {
               }
           }
 
+          if (fn.indexOf('{') > -1)
+            throw('json-processor: no substitution path for fn: "' + fn + '"')
+
           if (!path.isAbsolute(fn))
             fn = startPath + fn
+
+          if (!fs.existsSync(fn))
+            throw('json-processor: included file not found: "' + fn + '"')
 
 					buf = fs.readFileSync(fn, 'utf8');
 
 					if (path.extname(fn) === ".json")
 						newItem = JSON.parse(buf);
 
-          else if (options.types && (ext in options.types))
+          else if (options && (ext in options.types))
             newItem = options.types[ext](buf)
 
 					else {
-            console.log("ERROR: Unrecognized file type: " + ext);
+            throw("json-processor: Unrecognized file type: " + ext);
             break;
           }
 
@@ -103,10 +109,15 @@ function processJSON(startPath, filename, options) {
 		return dv;
 	}
 
-  let inbuf = fs.readFileSync(startPath + (filename || ''));
-	let directivesBuf = JSON.parse(inbuf);
-	let directives = processEntries(directivesBuf);
-	return directives
+  let fn = startPath + (filename || ''), inbuf, json_in, json_out
+  if (!fs.existsSync(fn))
+    throw("json-processor: Can't read file, doesn't exist: \"" + fn + '"')
+
+  inbuf = fs.readFileSync(fn, 'utf8');
+	json_in = JSON.parse(inbuf);
+	json_out = processEntries(json_in);
+
+	return json_out
 }
 
 export default processJSON
