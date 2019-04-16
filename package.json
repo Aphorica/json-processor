@@ -1,6 +1,6 @@
 {
   "name": "@aphorica/json-processor",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Assemble various json and other files to single json object - remove comment fields",
   "main": "index.js",
   "repository": "https://github.com/Aphorica/json-processor",
